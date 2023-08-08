@@ -16,6 +16,6 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use(bodyParser.json({limit:'10mb'}))
   setupSwagger(app)
-  await app.listen(3000);
+  await app.listen(5000);
 }
 bootstrap();
