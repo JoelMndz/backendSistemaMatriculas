@@ -5,7 +5,7 @@ import * as bodyParser from 'body-parser';
 import { setupSwagger } from './swagger.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{cors: true});
   
   app.useGlobalPipes(
     new ValidationPipe({
