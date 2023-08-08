@@ -18,7 +18,7 @@ export class AuthService {
     if(!user) throw new UnauthorizedException()
     const isMatchPassword = await compare(loginDto.password, user.password)
     if(!isMatchPassword) throw new UnauthorizedException()
-    const token = await this.jwtService.signAsync({_id: user._id})
+    const token = await this.jwtService.signAsync({_id: user._id, role: user.role })
 
     return{
       user,
@@ -29,9 +29,9 @@ export class AuthService {
   async registerAdmin(registerAdminDto: RegisterAdminDto){
     const user = await this.userService.registerAdmin(registerAdminDto);
 
-    const token = await this.jwtService.signAsync({_id: user._id })
+    const token = await this.jwtService.signAsync({_id: user._id, role: user.role })
     return {
-      usuario: user,
+      user: user,
       token
     }
   }
