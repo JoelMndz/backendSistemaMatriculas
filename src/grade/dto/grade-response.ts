@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsArray } from 'class-validator';
 
 export class GradeResponse {
   @ApiProperty()
@@ -8,10 +9,11 @@ export class GradeResponse {
   description: string;
 
   @ApiProperty()
+  @IsArray()
   grades: string[];
 }
 
 export class GradeResponseArray {
   @ApiProperty()
-  grade: GradeResponse;
+  grades: GradeResponse;
 }

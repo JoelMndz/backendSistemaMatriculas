@@ -13,13 +13,13 @@ export class GradeService {
   ) {}
 
   async create(createGradeDto: CreateGradeDto) {
-    console.log(createGradeDto);
-
-    return await this.gradeModel.create({
+    const newGrade = await this.gradeModel.create({
       name: createGradeDto.name,
       description: createGradeDto.description,
-      materias: createGradeDto.grades,
+      grades: createGradeDto.grades,
     });
+
+    return newGrade;
   }
 
   async findAll(): Promise<GradeModel[]> {
@@ -31,15 +31,17 @@ export class GradeService {
   }
 
   async update(id: string, updateGradeDto: UpdateGradeDto) {
-    return await this.gradeModel.findByIdAndUpdate(
+    const updatedGrade = await this.gradeModel.findByIdAndUpdate(
       id,
       {
         name: updateGradeDto.name,
         description: updateGradeDto.description,
-        materias: updateGradeDto.grades,
+        grades: updateGradeDto.grades,
       },
       { new: true },
     );
+
+    return updatedGrade;
   }
 
   async remove(id: string) {
