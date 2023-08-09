@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { CreateElectivePeriodDto } from './dto/create-elective-period.dto';
-import { UpdateElectivePeriodDto } from './dto/update-elective-period.dto';
+import { CreateSchoolTermDto } from './dto/create-school-term.dto';
+import { UpdateSchoolTermDto } from './dto/update-school-term.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { SchoolTerm } from './model/elective-period.entity';
+import { SchoolTerm } from './model/school-term.entity';
 import { Model } from 'mongoose';
 
+
 @Injectable()
-export class ElectivePeriodService {
+export class SchoolTermService {
   constructor(
     @InjectModel(SchoolTerm.name)
     private readonly schoolModel: Model<SchoolTerm>,
   ) {}
 
-  async create(createElectivePeriodDto: CreateElectivePeriodDto) {
+  async create(createElectivePeriodDto: CreateSchoolTermDto) {
     return await this.schoolModel.create({
       name: createElectivePeriodDto.name,
       description: createElectivePeriodDto.description,
@@ -27,7 +28,7 @@ export class ElectivePeriodService {
     return this.schoolModel.findById(id);
   }
 
-  async update(id: string, updateElectivePeriodDto: UpdateElectivePeriodDto) {
+  async update(id: string, updateElectivePeriodDto: UpdateSchoolTermDto) {
     return this.schoolModel.findByIdAndUpdate(
       id,
       {

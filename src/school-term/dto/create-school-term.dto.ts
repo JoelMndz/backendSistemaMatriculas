@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreateElectivePeriodDto {
+export class CreateSchoolTermDto {
   @ApiProperty()
   @IsString()
   name: string;
