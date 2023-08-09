@@ -7,6 +7,15 @@ export class SchoolTerm {
 
   @Prop()
   description: string;
+
+  @Prop()
+  current: boolean;
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt: Date;
 }
 
 export const SchoolTermSchema = SchemaFactory.createForClass(SchoolTerm);
