@@ -34,29 +34,22 @@ export class SchoolTermService {
   }
 
   async update(id: string, updateElectivePeriodDto: UpdateSchoolTermDto) {
-    await this.schoolModel.updateMany(
-      { current: true },
-      { $set: { current: false } },
-    );
+    const findTerm = await this.schoolModel.findById(id);
 
-    return await this.schoolModel.findByIdAndUpdate(
-      id,
-      {
-        name: updateElectivePeriodDto.name,
-        description: updateElectivePeriodDto.description,
-        current: true,
-      },
-      {
-        new: true,
-      },
-    );
+    if(!findTerm){
+      throw new Error('No se encontro el periodo');
+    }
+    return await this.schoolModel.findByIdAndUpdate(findTerm, {
+      name: updateElectivePeriodDto.name,
+      description: updateElectivePeriodDto.description,
+    });
   }
 
   async remove(id: string) {
     const findCurrentTerm = await this.schoolModel.findById(id);
 
     if (findCurrentTerm.current === true) {
-      throw new NotFoundException('Cannot delete current school term');
+      throw new Error('Cannot delete current school term');
     }
 
     return await this.schoolModel.findByIdAndDelete(id);

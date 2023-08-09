@@ -31,16 +31,11 @@ export class GradeService {
   }
 
   async update(id: string, updateGradeDto: UpdateGradeDto) {
-    const updatedGrade = await this.gradeModel.findByIdAndUpdate(
-      id,
-      {
-        name: updateGradeDto.name,
-        description: updateGradeDto.description,
-        subjects: updateGradeDto.subjects,
-      },
-      { new: true },
-    );
-    
+    const updatedGrade = await this.gradeModel.findByIdAndUpdate(id, {
+      name: updateGradeDto.name,
+      description: updateGradeDto.description,
+      subjects: updateGradeDto.subjects,
+    });
 
     return updatedGrade;
   }
