@@ -7,7 +7,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 
 //@ApiBearerAuth()
 //@UseGuards(AuthGuard)
-@ApiTags('School Term')
+@ApiTags('Periodo académico')
 @Controller('school-term')
 export class SchoolTermController {
   constructor(private readonly schoolTermService: SchoolTermService) {}
