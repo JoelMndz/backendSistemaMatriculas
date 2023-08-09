@@ -9,7 +9,7 @@ export class GradeModel {
   description: string;
 
   @Prop({ required: true })
-  grades: string[];
+  subjects: string[];
 }
 
 export const GradeSchema = SchemaFactory.createForClass(GradeModel);

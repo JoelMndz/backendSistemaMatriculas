@@ -10,10 +10,10 @@ export class GradeResponse {
 
   @ApiProperty()
   @IsArray()
-  grades: string[];
+  subjects: string[];
 }
 
 export class GradeResponseArray {
   @ApiProperty()
-  grades: GradeResponse;
+  subjects: GradeResponse;
 }

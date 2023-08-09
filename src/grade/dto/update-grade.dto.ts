@@ -13,5 +13,5 @@ export class UpdateGradeDto extends PartialType(CreateGradeDto) {
 
   @ApiProperty()
   @IsArray()
-  grades: string[];
+  subjects: string[];
 }

@@ -11,5 +11,5 @@ export class CreateGradeDto {
 
   @ApiProperty()
   @IsArray()
-  grades: string[];
+  subjects: string[];
 }

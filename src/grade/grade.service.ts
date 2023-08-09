@@ -16,7 +16,7 @@ export class GradeService {
     const newGrade = await this.gradeModel.create({
       name: createGradeDto.name,
       description: createGradeDto.description,
-      grades: createGradeDto.grades,
+      subjects: createGradeDto.subjects,
     });
 
     return newGrade;
@@ -36,7 +36,7 @@ export class GradeService {
       {
         name: updateGradeDto.name,
         description: updateGradeDto.description,
-        grades: updateGradeDto.grades,
+        subjects: updateGradeDto.subjects,
       },
       { new: true },
     );
