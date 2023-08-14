@@ -17,8 +17,8 @@ export class UserService {
   }
 
   async registerAdmin(userDto: RegisterAdminDto){
-    const admin = await this.userModel.findOne({email: userDto.email})
-    if(admin) throw new BadRequestException("Ya existe un administrador registrado!")
+    if(await this.findUserByEmail(userDto.email)) throw new BadRequestException('El email ya está registrado!')
+    if(await this.userModel.findOne({role: Role.Admin})) throw new BadRequestException("Ya existe un administrador registrado!")
     userDto.password = await hash(userDto.password, 10);
     return await this.userModel.create({...userDto, role: Role.Admin})
   }
