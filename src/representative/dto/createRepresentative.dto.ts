@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBase64, IsNotEmpty, IsEmail, IsString, ValidateNested } from 'class-validator';
+import { IsBase64, IsNotEmpty, IsEmail, IsString, ValidateNested, IsDate, IsNumber } from 'class-validator';
 
 export class FileBase64{
   @ApiProperty()
@@ -29,6 +29,15 @@ export class CreateRepresentativeDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @ApiProperty()
+  @IsNumber()
+  birthDate: number
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  address: string
   
   @ApiProperty()
   @ValidateNested()

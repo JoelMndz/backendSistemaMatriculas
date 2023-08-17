@@ -32,6 +32,8 @@ export class RepresentativeService {
     entityUpdate.cedula = entityDto.cedula
     entityUpdate.fullName = entityDto.fullName
     entityUpdate.email = entityDto.email
+    entityUpdate.birthDate = entityDto.birthDate
+    entityUpdate.address = entityDto.address
     await entityUpdate.save()
     return entityUpdate
   }

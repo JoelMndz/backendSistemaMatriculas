@@ -14,6 +14,12 @@ export class RepresentativeModel{
   @Prop()
   imageCedulaUrl: string
 
+  @Prop({required: true})
+  birthDate: number
+
+  @Prop({required:true})
+  address: string
+
   @Prop({default: true})
   status: boolean
 }
