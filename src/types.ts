@@ -10,3 +10,8 @@ export interface IAuthGuardPayload{
     role:Role
   }
 }
+
+export enum ContentTypes{
+  imageJPEG = 'image/jpeg',
+  pdf = 'application/pdf'
+}
