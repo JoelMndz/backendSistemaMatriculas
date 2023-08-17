@@ -5,8 +5,8 @@ import { RepresentativeService } from './representative.service';
 import { CreateRepresentativeDto } from './dto/createRepresentative.dto';
 import { UpdateRepresentativeDto } from './dto/updateRepresentative.dto';
 
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard)
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('Acudiente')
 @Controller('representative')
 export class RepresentativeController {
