@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBase64, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { IsBase64, IsNotEmpty, IsEmail, IsString, ValidateNested } from 'class-validator';
 
 export class FileBase64{
   @ApiProperty()
@@ -26,7 +26,7 @@ export class CreateRepresentativeDto {
   cedula: string;
 
   @ApiProperty()
-  @IsString()
+  @IsEmail()
   @IsNotEmpty()
   email: string;
   

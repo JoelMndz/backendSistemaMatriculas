@@ -31,7 +31,7 @@ export class RepresentativeService {
       entityUpdate.imageCedulaUrl = await this.storage.uploadFile(entityDto.cedulaFile.fileName,entityDto.cedulaFile.base64)
     entityUpdate.cedula = entityDto.cedula
     entityUpdate.fullName = entityDto.fullName
-    entityUpdate.email = entityDto.fullName
+    entityUpdate.email = entityDto.email
     await entityUpdate.save()
     return entityUpdate
   }
