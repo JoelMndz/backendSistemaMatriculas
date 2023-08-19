@@ -9,6 +9,7 @@ import { GradeModule } from './grade/grade.module';
 import { SchoolTermModule } from './school-term/school-term.module';
 import { StorageModule } from './storage/storage.module';
 import { RepresentativeModule } from './representative/representative.module';
+import { ProfessorModule } from './professor/professor.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RepresentativeModule } from './representative/representative.module';
     SchoolTermModule,
     StorageModule,
     RepresentativeModule,
+    ProfessorModule,
   ],
   controllers: [],
   providers: [],
