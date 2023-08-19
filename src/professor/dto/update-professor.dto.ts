@@ -2,7 +2,6 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateProfessorDto } from './create-professor.dto';
 import {
   IsBase64,
-  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -15,10 +14,12 @@ import { Type } from 'class-transformer';
 export class File {
   @ApiProperty()
   @IsBase64()
+  @IsNotEmpty() 
   base64: string;
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   fileName: string;
 }
 
@@ -31,8 +32,8 @@ export class UpdateProfessorDto extends PartialType(CreateProfessorDto) {
   @ApiProperty()
   @IsNotEmpty()
   @Length(6, 10)
-  @IsNumber()
-  cedula: number;
+  @IsString()
+  cedula: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -47,7 +48,7 @@ export class UpdateProfessorDto extends PartialType(CreateProfessorDto) {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  addrres: string;
+  address: string;
 
   @ApiProperty()
   @IsString()
@@ -59,9 +60,4 @@ export class UpdateProfessorDto extends PartialType(CreateProfessorDto) {
   @Type(() => File)
   @IsOptional()
   cv: File;
-
-  @ApiProperty()
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
 }

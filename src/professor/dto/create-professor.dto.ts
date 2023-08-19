@@ -1,8 +1,6 @@
 import {
   IsBase64,
-  IsBoolean,
   IsNotEmpty,
-  IsNumber,
   IsString,
   Length,
   ValidateNested,
@@ -30,9 +28,9 @@ export class CreateProfessorDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @Length(6, 10)
-  cedula: number;
+  cedula: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -46,7 +44,7 @@ export class CreateProfessorDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  addrres: string;
+  address: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -57,9 +55,4 @@ export class CreateProfessorDto {
   @ValidateNested()
   @Type(() => File)
   cv: File;
-
-  @ApiProperty()
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
 }

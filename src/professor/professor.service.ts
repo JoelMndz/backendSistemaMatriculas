@@ -20,8 +20,7 @@ export class ProfessorService {
       cv.fileName,
       cv.base64,
     );
-    if (!urlFile) throw new Error('Error uploading CV file, Create');
-
+    if (!urlFile) throw new Error('Error subiendo el archivo');
     return await this.modelProfesor.create({
       ...createProfessorDto,
       cv: urlFile,
@@ -29,30 +28,31 @@ export class ProfessorService {
   }
 
   async findAll(): Promise<Professor[]> {
-    return this.modelProfesor.find();
+    return this.modelProfesor.find({ status: true });
   }
 
   async update(id: string, updateProfessorDto: UpdateProfessorDto) {
     const findProfesorId = await this.modelProfesor.findById(id);
-    if (!findProfesorId) throw new Error('id not find');
-
+    if (!findProfesorId) throw new Error('id no encontrado');
     const { cv } = updateProfessorDto;
-    const urlFile = await this.serviceStorage.uploadFile(
-      cv.fileName,
-      cv.base64,
-    );
-    if (!urlFile) throw new Error('Error uploading CV file, Update');
-
-    return await this.modelProfesor.findByIdAndUpdate(findProfesorId, {
-      ...updateProfessorDto,
-      cv: urlFile,
-    });
+      if(cv){
+        findProfesorId.cv = await this.serviceStorage.uploadFile(
+        cv.fileName,
+        cv.base64,
+      );
+    }
+    findProfesorId.fullName = updateProfessorDto.fullName;
+    findProfesorId.cedula = updateProfessorDto.cedula;
+    findProfesorId.dateBirth = updateProfessorDto.dateBirth;
+    findProfesorId.email = updateProfessorDto.email;
+    findProfesorId.address = updateProfessorDto.address;
+    findProfesorId.disability = updateProfessorDto.disability;
+    await findProfesorId.save();
+    return findProfesorId
   }
 
   async remove(id: string) {
-    const findProfesorId = await this.modelProfesor.findById(id);
-    if (!findProfesorId) throw new Error('id no encontrado');
-    return this.modelProfesor.findByIdAndUpdate(findProfesorId, {
+    return await this.modelProfesor.findByIdAndUpdate(id, {
       status: false,
     });
   }
