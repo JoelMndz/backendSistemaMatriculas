@@ -28,7 +28,6 @@ export class GradeController {
   })
   @Post()
   create(@Body() createGradeDto: CreateGradeDto) {
-    console.log(createGradeDto);
     return this.gradeService.create(createGradeDto);
   }
 
@@ -37,18 +36,12 @@ export class GradeController {
     return this.gradeService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gradeService.findOne(id);
-  }
-
   @ApiOkResponse({
     description: 'successfully updated',
     type: GradeResponseArray,
   })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGradeDto: UpdateGradeDto) {
-    console.log(updateGradeDto);
     return this.gradeService.update(id, updateGradeDto);
   }
 
