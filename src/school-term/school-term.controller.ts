@@ -5,8 +5,8 @@ import { UpdateSchoolTermDto } from './dto/update-school-term.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 
-//@ApiBearerAuth()
-//@UseGuards(AuthGuard)
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('Periodo académico')
 @Controller('school-term')
 export class SchoolTermController {
