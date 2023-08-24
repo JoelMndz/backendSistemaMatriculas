@@ -77,8 +77,6 @@ export class ParallelService {
 }
 
   async remove(id: string) {
-    return await this.modelParallel.findByIdAndUpdate(id , {
-      status: false
-    })
+    return await this.modelParallel.findByIdAndUpdate(id)
   }
 }
