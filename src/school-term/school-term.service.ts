@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSchoolTermDto } from './dto/create-school-term.dto';
 import { UpdateSchoolTermDto } from './dto/update-school-term.dto';
 import { InjectModel } from '@nestjs/mongoose';

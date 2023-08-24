@@ -8,9 +8,7 @@ import { Model } from 'mongoose';
 @Injectable()
 export class GradeService {
   constructor(
-    @InjectModel(GradeModel.name)
-    private readonly gradeModel: Model<GradeModel>,
-  ) {}
+    @InjectModel(GradeModel.name) private readonly gradeModel: Model<GradeModel>) {}
 
   async create(createGradeDto: CreateGradeDto) {
     const newGrade = await this.gradeModel.create({
@@ -22,13 +20,81 @@ export class GradeService {
     return newGrade;
   }
 
-  async findAll(): Promise<GradeModel[]> {
-    return this.gradeModel.find();
-  }
+async findAll(): Promise<GradeModel[]> {
+  return await this.gradeModel.aggregate([
+    {
+      $lookup: {
+        from: 'parallels', 
+        localField: '_id',
+        foreignField: '_grade',
+        as: 'parallels'
+      }
+    },
+    {
+      $lookup: {
+        from: 'professors',
+        localField: 'parallels._professor',
+        foreignField: '_id',
+        as: 'professors'
+      }
+    },
+    {
+      $unwind: {
+        path: '$parallels',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        $or: [
+          { 'parallels.status': true },
+          { parallels: { $exists: false } },
+        ],
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        name: { $first: '$name' },
+        description: { $first: '$description' },
+        subjects: { $first: '$subjects' },
+        parallels: { $push: '$parallels' },
+        professors: { $first: '$professors' },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        description: 1,
+        subjects: 1,
+        parallels: {
+          $map: {
+            input: '$parallels',
+            as: 'parallel',
+            in: {
+              $mergeObjects: [
+                '$$parallel',
+                {
+                  professors: {
+                    $filter: {
+                      input: '$professors',
+                      as: 'professor',
+                      cond: {
+                        $eq: ['$$professor._id', '$$parallel._professor'],
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  ]);
+}
 
-  async findOne(id: string) {
-    return this.gradeModel.findById(id);
-  }
 
   async update(id: string, updateGradeDto: UpdateGradeDto) {
     const updatedGrade = await this.gradeModel.findByIdAndUpdate(id, {
@@ -41,6 +107,6 @@ export class GradeService {
   }
 
   async remove(id: string) {
-    return this.gradeModel.findByIdAndDelete(id);
+    return await this.gradeModel.findByIdAndDelete(id);
   }
 }
