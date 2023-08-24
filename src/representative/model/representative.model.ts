@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 
 @Schema()
-export class RepresentativeModel{
+export class Representative{
   @Prop({required: true})
   fullName: string
 
@@ -24,4 +24,4 @@ export class RepresentativeModel{
   status: boolean
 }
 
-export const RepresentativeSchema = SchemaFactory.createForClass(RepresentativeModel)
+export const RepresentativeSchema = SchemaFactory.createForClass(Representative)

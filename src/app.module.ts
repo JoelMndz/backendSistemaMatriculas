@@ -10,6 +10,7 @@ import { SchoolTermModule } from './school-term/school-term.module';
 import { StorageModule } from './storage/storage.module';
 import { RepresentativeModule } from './representative/representative.module';
 import { ProfessorModule } from './professor/professor.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProfessorModule } from './professor/professor.module';
     StorageModule,
     RepresentativeModule,
     ProfessorModule,
+    StudentModule,
   ],
   controllers: [],
   providers: [],

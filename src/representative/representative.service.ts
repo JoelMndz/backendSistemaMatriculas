@@ -1,7 +1,7 @@
 import { Injectable,BadRequestException } from '@nestjs/common';
 import { CreateRepresentativeDto } from './dto/createRepresentative.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { RepresentativeModel } from './model/representative.model';
+import { Representative } from './model/representative.model';
 import { Model } from 'mongoose';
 import { StorageService } from 'src/storage/storage.service';
 import { UpdateRepresentativeDto } from './dto/updateRepresentative.dto';
@@ -10,8 +10,8 @@ import { UpdateRepresentativeDto } from './dto/updateRepresentative.dto';
 export class RepresentativeService {
 
   constructor(
-    @InjectModel(RepresentativeModel.name)
-    private readonly representativeModel:Model<RepresentativeModel>,
+    @InjectModel(Representative.name)
+    private readonly representativeModel:Model<Representative>,
     private storage:StorageService,
   ){}
 

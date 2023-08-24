@@ -9,13 +9,12 @@ export class StorageService {
     @InjectFirebaseAdmin() private readonly firebase: FirebaseAdmin
   ){}
 
-  async uploadFile(fileName: string, base64: string,contentType:ContentTypes = ContentTypes.imageJPEG):Promise<string>{
+  async uploadFile(fileName: string, base64: string):Promise<string>{
     const bucket = this.firebase.storage.bucket()
     const file = bucket.file(this.renameFile(fileName));
     const buffer = Buffer.from(base64,'base64')
     await file.save(buffer,{
       metadata:{
-        contentType: '',
         resumable: false,
       }
     })
