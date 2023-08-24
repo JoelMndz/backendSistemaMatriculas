@@ -14,7 +14,12 @@ export class FileBase64{
   fileName: string  
 }
 
-export class CreateStudentDto{
+export class UpdateStudentDto{
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  _id: string
+  
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -55,11 +60,13 @@ export class CreateStudentDto{
   @ApiProperty()
   @ValidateNested()
   @Type(()=>FileBase64)
+  @IsOptional()
   cedulaFile: FileBase64
 
   @ApiProperty()
   @ValidateNested()
   @Type(()=>FileBase64)
+  @IsOptional()
   bulletinFile: FileBase64
 
   @ApiProperty()

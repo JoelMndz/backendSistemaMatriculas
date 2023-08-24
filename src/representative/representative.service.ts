@@ -29,11 +29,9 @@ export class RepresentativeService {
     if(!entityUpdate) throw new BadRequestException('El id no existe!')
     if(entityDto.cedulaFile)
       entityUpdate.imageCedulaUrl = await this.storage.uploadFile(entityDto.cedulaFile.fileName,entityDto.cedulaFile.base64)
-    entityUpdate.cedula = entityDto.cedula
-    entityUpdate.fullName = entityDto.fullName
-    entityUpdate.email = entityDto.email
-    entityUpdate.birthDate = entityDto.birthDate
-    entityUpdate.address = entityDto.address
+    
+    Object.assign(entityUpdate,{...entityDto})
+
     await entityUpdate.save()
     return entityUpdate
   }
