@@ -16,13 +16,13 @@ export class Parallel {
   @Prop({ default: true })
   status: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'GradeModel' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'GradeModel', required: true })
   _grade: GradeModel;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'SchoolTerm' })
   _schoolTerm: SchoolTerm;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Professor' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Professor', required: true })
   _professor: Professor;
 }
 

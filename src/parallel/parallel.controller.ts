@@ -17,11 +17,6 @@ export class ParallelController {
     return this.parallelService.create(createParallelDto);
   }
 
-  @Get()
-  findAll() {
-    return this.parallelService.findAll();
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateParallelDto: UpdateParallelDto) {
     return this.parallelService.update(id, updateParallelDto);
