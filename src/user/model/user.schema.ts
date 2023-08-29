@@ -2,7 +2,7 @@ import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Role } from "src/types";
 
 @Schema()
-export class UserModel{
+export class User{
   @Prop({ required: true })
   firstName: string;
 
@@ -19,4 +19,4 @@ export class UserModel{
   role: string
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserModel);
+export const UserSchema = SchemaFactory.createForClass(User);
