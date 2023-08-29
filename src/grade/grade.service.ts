@@ -3,14 +3,15 @@ import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { GradeModel } from './model/grade.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
+import { Parallel } from 'src/parallel/model/parallel.entity';
 
 @Injectable()
 export class GradeService {
   constructor(
-    @InjectModel(GradeModel.name)
-    private readonly gradeModel: Model<GradeModel>,
-  ) {}
+    @InjectModel(GradeModel.name) private readonly gradeModel: Model<GradeModel>,
+    @InjectModel(Parallel.name) private readonly parallelModel: Model<Parallel>,
+    ) {}
 
   async create(createGradeDto: CreateGradeDto) {
     const newGrade = await this.gradeModel.create({
@@ -22,92 +23,54 @@ export class GradeService {
     return newGrade;
   }
 
-  async findAll(): Promise<GradeModel[]> {
-    return await this.gradeModel.aggregate([
-      {
-        $lookup: {
-          from: 'parallels',
-          localField: '_id',
-          foreignField: '_grade',
-          as: 'parallels',
-        },
-      },
-      {
-        $lookup: {
-          from: 'professors',
-          localField: 'parallels._professor',
-          foreignField: '_id',
-          as: 'professors',
-        },
-      },
-      {
-        $unwind: {
-          path: '$parallels',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $group: {
-          _id: '$_id',
-          name: { $first: '$name' },
-          description: { $first: '$description' },
-          subjects: { $first: '$subjects' },
-          parallels: { $push: '$parallels' },
-          professors: { $first: '$professors' },
-        },
-      },
-      {
-        $lookup: {
-          from: 'schoolterms',
-          localField: 'parallels._schoolTerm',
-          foreignField: '_id',
-          as: 'parallelSchoolterms',
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          description: 1,
-          subjects: 1,
-          parallels: {
-            $map: {
-              input: '$parallels',
-              as: 'parallel',
-              in: {
-                $mergeObjects: [
-                  '$$parallel',
-                  {
-                    schoolterm: {
-                      $filter: {
-                        input: '$parallelSchoolterms',
-                        as: 'schoolterm',
-                        cond: {
-                          $eq: ['$$schoolterm._id', '$$parallel._schoolTerm'],
-                        },
-                      },
-                    },
-                  },
-                  {
-                    professors: {
-                      $filter: {
-                        input: '$professors',
-                        as: 'professor',
-                        cond: {
-                          $eq: ['$$professor._id', '$$parallel._professor'],
-                        },
-                      },
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        },
-      },
-    ]);
-  }
+  async findAll(schoolTermId: string): Promise<GradeModel[]> {
+    const objectIdSchoolTermId = new mongoose.Types.ObjectId(schoolTermId);
 
+    try {
+      const courses = await this.gradeModel.find().lean();
+
+      const parallelQuery = {
+        $or: [
+          { _schoolTerm: objectIdSchoolTermId },
+          { _schoolTerm: null }
+        ]
+      };
+
+      const allParallels = await this.parallelModel
+        .find(parallelQuery)
+        .populate('_professor')
+        .populate('_schoolTerm')
+        .lean();
+
+      const result = courses.map(course => {
+        const courseParallels = allParallels.filter(parallel =>
+          parallel._grade.toString() === course._id.toString()
+        );
+
+        return {
+          _id: course._id,
+          name: course.name,
+          description: course.description,
+          subjects: course.subjects,
+          parallels: courseParallels.map(parallel => ({
+            _id: parallel._id,
+            name: parallel.name,
+            quotas: parallel.quotas,
+            status: parallel.status,
+            _grade: parallel._grade,
+            schoolterm: [parallel._schoolTerm],
+            professors: [parallel._professor],
+          })),
+        };
+      });
+
+      return result;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+  
   async update(id: string, updateGradeDto: UpdateGradeDto) {
     const updatedGrade = await this.gradeModel.findByIdAndUpdate(id, {
       name: updateGradeDto.name,
