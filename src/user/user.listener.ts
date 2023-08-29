@@ -12,7 +12,6 @@ export class UserListener{
 
   @OnEvent('user.created')
   async userCreatedListener(userCreated:UserCreatedEvent){
-    console.log('Usuario creado',userCreated);
     await this.emailService.sendEmail({
       to: userCreated.email,
       subject: 'Bienvenido al sistema escolar',

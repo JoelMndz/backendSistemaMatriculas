@@ -37,7 +37,7 @@ export class UserService {
     if(existUser) throw new BadRequestException('El email ya se encuentra registrado!')
     
     const passwordGenerated = generate()
-    const userCreated = await this.userModel.create({...createDto, password: passwordGenerated})
+    const userCreated = await this.userModel.create({...createDto, password: await hash(passwordGenerated, 10)})
 
     this.eventService.emitUserCreated(
       new UserCreatedEvent(
@@ -49,5 +49,11 @@ export class UserService {
       )
     )
     return createDto
+  }
+
+  async delete(id:string){
+    const user = await this.userModel.findByIdAndDelete(id)
+    if(!user) throw new BadRequestException('El id no existe!')
+    return user
   }
 }
