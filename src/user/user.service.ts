@@ -1,16 +1,25 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserModel } from './model/user.schema';
+import { User } from './model/user.schema';
 import { Model } from 'mongoose';
 import { RegisterAdminDto } from 'src/auth/dto/registroAdminDto';
 import { Role } from 'src/types';
 import { hash } from 'bcrypt';
+import { CreateUserDto } from './dto/createUser.dto';
+import { EventService } from 'src/services/event.service';
+import { UserCreatedEvent } from './events/user-created.event';
+import {generate} from "generate-password";
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(UserModel.name) private userModel: Model<UserModel>
-  ){}
+    @InjectModel(User.name) private userModel: Model<User>,
+    private eventService:EventService    
+    ){}
+
+  async getAll(){
+    return await this.userModel.find()
+  }
 
   async findUserByEmail(email:string){
     return await this.userModel.findOne({email: email})
@@ -23,4 +32,22 @@ export class UserService {
     return await this.userModel.create({...userDto, role: Role.Admin})
   }
 
+  async createUser(createDto: CreateUserDto){
+    const existUser = await this.findUserByEmail(createDto.email)
+    if(existUser) throw new BadRequestException('El email ya se encuentra registrado!')
+    
+    const passwordGenerated = generate()
+    const userCreated = await this.userModel.create({...createDto, password: passwordGenerated})
+
+    this.eventService.emitUserCreated(
+      new UserCreatedEvent(
+        userCreated.firstName,
+        userCreated.lastName,
+        userCreated.email,
+        passwordGenerated,
+        userCreated.role as Role,
+      )
+    )
+    return createDto
+  }
 }
