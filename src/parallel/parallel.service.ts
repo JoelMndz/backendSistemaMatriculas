@@ -95,7 +95,7 @@ export class ParallelService {
 }
 
   async findAll() : Promise<Parallel[]> {
-    return this.modelParallel.find()
+    return this.modelParallel.find().populate('_grade _schoolTerm')
   }
 
   async remove(id: string) {

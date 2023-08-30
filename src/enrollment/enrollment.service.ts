@@ -78,4 +78,3 @@ export class EnrollmentService {
     return `${id}`
   }
 }
-// Al momento de crear directamente haz la consulta por ese estudiante, si tiene una matrícula en un paralelo del período actual
