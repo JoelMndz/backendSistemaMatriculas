@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ParallelService } from './parallel.service';
 import { CreateParallelDto } from './dto/create-parallel.dto';
 import { UpdateParallelDto } from './dto/update-parallel.dto';
@@ -15,11 +15,6 @@ export class ParallelController {
   @Post()
   create(@Body() createParallelDto: CreateParallelDto) {
     return this.parallelService.create(createParallelDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.parallelService.findAll();
   }
 
   @Patch(':id')
