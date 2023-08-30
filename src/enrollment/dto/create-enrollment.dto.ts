@@ -4,16 +4,6 @@ import { ApiProperty } from '@nestjs/swagger'
 export class CreateEnrollmentDto {
 
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  date: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  endNote: number;
-
-  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   _student: string

@@ -6,18 +6,25 @@ import { Enrollment } from './model/enrollment.entity';
 import { Model } from 'mongoose';
 import { Parallel } from 'src/parallel/model/parallel.entity';
 import { Student } from 'src/student/model/student.model';
+import { SchoolTerm } from 'src/school-term/model/school-term.entity';
 
 @Injectable()
 export class EnrollmentService {
   
   constructor(
-    @InjectModel(Enrollment.name) private readonly modelEnrollment: Model<Enrollment>,
-    @InjectModel(Parallel.name) private readonly modeloParallel: Model<Parallel>,
-    @InjectModel(Student.name) private readonly modelStudent: Model<Student>
+    @InjectModel('Enrollment') private readonly modelEnrollment: Model<Enrollment>,
+    @InjectModel('Parallel') private readonly modeloParallel: Model<Parallel>,
+    @InjectModel('Student') private readonly modelStudent: Model<Student>,
+    @InjectModel('SchoolTerm') private readonly modelSchoolTerm: Model<SchoolTerm>
     ) {}
 
   async create(createEnrollmentDto: CreateEnrollmentDto) {
-    const { _parallel, _student, date, endNote } = createEnrollmentDto
+    const { _parallel, _student } = createEnrollmentDto
+
+    const currentSchoolTerm = await this.modelSchoolTerm.findOne({ current: true })
+    if(!currentSchoolTerm){
+      throw new NotFoundException('No existe el periodo actual')
+    }
 
     const parallel = await this.modeloParallel.findById(_parallel);
     if(!parallel){
@@ -29,36 +36,46 @@ export class EnrollmentService {
       throw new NotFoundException('No se encontro el estudiante');
     }
 
-    return await  this.modelEnrollment.create({
+    const existingStudentParallel = await this.modelEnrollment.findOne({
       _parallel: _parallel,
       _student: _student,
-      date: date,
-      endNote: endNote
     })
+    if(existingStudentParallel){
+      throw new NotFoundException('El estudiante ya tiene una matricula en este periodo y paralelo')
+    }
 
+    const utcDateInMillis = new Date().getTime(); 
+
+    return await this.modelEnrollment.create({
+      _parallel: parallel._id,
+      _student: student._id,
+      date: utcDateInMillis
+    })
   }
 
   async findAll() {
-    return await this.modelEnrollment.find().populate('_student _parallel')
+    return await this.modelEnrollment.find().populate({
+      path: '_parallel',
+      populate: [
+        {
+          path: '_grade',
+          model: 'GradeModel'
+        },
+        {
+          path: '_schoolTerm',
+          model: 'SchoolTerm'
+        }
+      ]
+    })
+    .populate('_student');
   }
 
   async update(id: string, updateEnrollmentDto: UpdateEnrollmentDto) {
-    const { _parallel, _student, } = updateEnrollmentDto;
-
-    const parallel = await this.modeloParallel.findById(_parallel);
-    if(!parallel){
-      throw new NotFoundException('No se encontro el paralelo');
-    }
-
-    const student = await this.modelStudent.findById(_student);
-    if(!student){
-      throw new NotFoundException('No se encontro el estudiante');
-    }
-
-    return await this.modelEnrollment.findByIdAndUpdate(id, updateEnrollmentDto)
+    return `${id} and ${updateEnrollmentDto}`
   }
 
   async remove(id: string) {
-    return await this.modelEnrollment.findByIdAndRemove(id)
+    return `${id}`
   }
 }
+// Al momento de crear directamente haz la consulta por ese estudiante, si tiene una matrícula en un paralelo del período actual

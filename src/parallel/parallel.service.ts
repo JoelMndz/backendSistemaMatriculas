@@ -94,6 +94,10 @@ export class ParallelService {
     return existingParallel;
 }
 
+  async findAll() : Promise<Parallel[]> {
+    return this.modelParallel.find()
+  }
+
   async remove(id: string) {
     return await this.modelParallel.findByIdAndDelete(id)
   }
