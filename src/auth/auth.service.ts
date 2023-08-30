@@ -4,6 +4,10 @@ import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { compare } from 'bcrypt';
 import { RegisterAdminDto } from './dto/registroAdminDto';
+import { EmailService } from 'src/services/email.service';
+import {generate} from "generate-password";
+import { SendCodeRecoveryDto } from './dto/sendCodeRecovery.dto';
+import { UpdatePasswordRecovery } from './dto/updatePasswordRecovery';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +15,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ){}
 
   async login(loginDto: LoginDto){
@@ -34,5 +39,26 @@ export class AuthService {
       user: user,
       token
     }
+  }
+
+  async sendCodeRecovery({email}:SendCodeRecoveryDto){
+    const user = await this.userService.findUserByEmail(email)
+    if(!user)
+      throw new BadRequestException('El email no existe!')
+
+    const code = generate({numbers:true,length:4})
+    await this.emailService.sendEmail({
+      to:email,
+      subject:'Recuperar contraseña',
+      html:`
+        <h1>Código: ${code}</h1>
+      `
+    })
+    await this.userService.updateCodeRecovery(email,code)
+    return {email}
+  }
+
+  async updatePasswordRecovery(updateDto:UpdatePasswordRecovery){
+    return await this.userService.updatePasswordRecovery(updateDto)
   }
 }

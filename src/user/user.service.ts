@@ -9,6 +9,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { EventService } from 'src/services/event.service';
 import { UserCreatedEvent } from './events/user-created.event';
 import {generate} from "generate-password";
+import { UpdatePasswordRecovery } from 'src/auth/dto/updatePasswordRecovery';
 
 @Injectable()
 export class UserService {
@@ -55,5 +56,21 @@ export class UserService {
     const user = await this.userModel.findByIdAndDelete(id)
     if(!user) throw new BadRequestException('El id no existe!')
     return user
+  }
+
+  async updateCodeRecovery(email:string, code:string){
+    await this.userModel.findOneAndUpdate({email},{code})
+  }
+
+  async updatePasswordRecovery(updateDto:UpdatePasswordRecovery){
+    const user = await this.userModel.findOne({email:updateDto.email})
+    if(!user)
+      throw new BadRequestException('El email no existe!')
+    if(user.code !== updateDto.code)
+      throw new BadRequestException('El código no coincide!')
+    user.password = await hash(updateDto.password, 10);
+    user.code = null
+    await user.save()
+    return updateDto
   }
 }
