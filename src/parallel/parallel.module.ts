@@ -11,10 +11,12 @@ import { Professor, ProfessorSchema } from 'src/professor/model/professor.entity
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Parallel.name, schema: ParallelSchema }]),
-    MongooseModule.forFeature([{ name: SchoolTerm.name, schema: SchoolTermSchema }]),
-    MongooseModule.forFeature([{ name: GradeModel.name, schema: GradeSchema}]),
-    MongooseModule.forFeature([{ name: Professor.name, schema: ProfessorSchema}]),
+    MongooseModule.forFeature([
+      { name: 'Parallel', schema: ParallelSchema },
+      { name: 'SchoolTerm', schema: SchoolTermSchema },
+      { name: 'GradeModel', schema: GradeSchema },
+      { name: 'Professor', schema: ProfessorSchema }
+    ]),
     AuthModule,
     SchoolTermModule
   ],

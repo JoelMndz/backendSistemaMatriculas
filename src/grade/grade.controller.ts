@@ -6,7 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import { GradeService } from './grade.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
@@ -32,8 +33,8 @@ export class GradeController {
   }
 
   @Get()
-  findAll() {
-    return this.gradeService.findAll();
+  findAll(@Query('schoolTermId') schoolTermId: string) {
+    return this.gradeService.findAll(schoolTermId);
   }
 
   @ApiOkResponse({
