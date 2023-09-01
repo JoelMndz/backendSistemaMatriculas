@@ -11,6 +11,7 @@ import { RepresentativeModule } from './representative/representative.module';
 import { ProfessorModule } from './professor/professor.module';
 import { StudentModule } from './student/student.module';
 import { ParallelModule } from './parallel/parallel.module';
+import { EnrollmentModule } from './enrollment/enrollment.module';
 import {EventEmitterModule} from "@nestjs/event-emitter";
 
 @Module({
@@ -28,6 +29,7 @@ import {EventEmitterModule} from "@nestjs/event-emitter";
     ProfessorModule,
     StudentModule,
     ParallelModule,
+    EnrollmentModule,
   ],
   controllers: [],
   providers: [],

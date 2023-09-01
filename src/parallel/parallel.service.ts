@@ -7,6 +7,7 @@ import { Parallel } from './model/parallel.entity';
 import { SchoolTerm } from 'src/school-term/model/school-term.entity';
 import { GradeModel } from 'src/grade/model/grade.schema';
 import { Professor } from 'src/professor/model/professor.entity';
+import { Enrollment } from 'src/enrollment/model/enrollment.entity';
 
 @Injectable()
 export class ParallelService {
@@ -15,7 +16,8 @@ export class ParallelService {
     @InjectModel(Parallel.name) private readonly modelParallel: Model<Parallel>,
     @InjectModel(SchoolTerm.name) private readonly modelSchoolTerm : Model<SchoolTerm>,
     @InjectModel(GradeModel.name) private readonly modelGrade: Model<GradeModel>,
-    @InjectModel(Professor.name) private readonly modelProfessor: Model<Professor>
+    @InjectModel(Professor.name) private readonly modelProfessor: Model<Professor>,
+    @InjectModel(Enrollment.name) private readonly modeloEnrollment: Model<Enrollment>
     ){}
 
   async create(createParallelDto: CreateParallelDto) {
@@ -80,7 +82,7 @@ export class ParallelService {
     });
 
     if (duplicateParallel) {
-      throw new Error('El paralelo ya está registrado en este curso y periodo');
+      throw new NotFoundException('El paralelo ya está registrado en este curso y periodo');
     }
 
     existingParallel.name = upperCaseName;
@@ -94,7 +96,24 @@ export class ParallelService {
     return existingParallel;
 }
 
+  async findAll() : Promise<Parallel[]> {
+    return this.modelParallel.find().populate('_grade _schoolTerm')
+  }
+
   async remove(id: string) {
-    return await this.modelParallel.findByIdAndDelete(id)
+    const parallel =  await this.modelParallel.findById(id)
+    if(!parallel){
+      throw new NotFoundException('Paralelo no encontrado');
+    }
+
+    const parallelEnrollment = await this.modeloEnrollment.countDocuments({
+      _parallel: parallel._id
+    });
+
+    if(parallelEnrollment > 0){
+      throw new NotFoundException('El paralelo tiene matriculas asociadas');
+    }
+
+    return this.modelParallel.findByIdAndDelete(id)
   }
 }
