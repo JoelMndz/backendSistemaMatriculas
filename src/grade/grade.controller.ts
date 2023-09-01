@@ -17,8 +17,8 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { GradeResponseArray } from './dto/grade-response';
 
 @ApiTags('Grade')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+//@ApiBearerAuth()
+//@UseGuards(AuthGuard)
 @Controller('grade')
 export class GradeController {
   constructor(private readonly gradeService: GradeService) {}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -82,6 +82,20 @@ export class GradeService {
   }
 
   async remove(id: string) {
+
+    const grade =  await this.gradeModel.findById(id);
+    if(!grade){
+      throw new NotFoundException('Grado no encontrado');
+    }
+
+    const gradeParallel = await this.parallelModel.countDocuments({
+      _grade: grade._id
+    })
+
+    if(gradeParallel > 0){
+      throw new NotFoundException('El grado tiene paralelos asociados');
+    }
+    
     return await this.gradeModel.findByIdAndDelete(id);
   }
 }

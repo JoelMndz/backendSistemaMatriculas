@@ -36,11 +36,13 @@ export class EnrollmentService {
       throw new NotFoundException('No se encontro el estudiante');
     }
 
-    const existingStudentParallel = await this.modelEnrollment.findOne({
-      _parallel: _parallel,
-      _student: _student,
+    const existingEnrollment = await this.modelEnrollment.findOne({
+      $or: [
+        { _student: _student, '_parallel._schoolTerm': currentSchoolTerm._id },
+        { _student: _student, _parallel: _parallel }
+      ]
     })
-    if(existingStudentParallel){
+    if(existingEnrollment){
       throw new NotFoundException('El estudiante ya tiene una matricula en este periodo y paralelo')
     }
 
@@ -75,6 +77,6 @@ export class EnrollmentService {
   }
 
   async remove(id: string) {
-    return `${id}`
+    return this.modelEnrollment.findByIdAndDelete(id);
   }
 }
