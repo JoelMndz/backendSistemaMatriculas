@@ -23,7 +23,6 @@ export class ProfessorController {
 
   @Post()
   create(@Body() createProfessorDto: CreateProfessorDto) {
-    console.log(createProfessorDto);
     return this.professorService.create(createProfessorDto);
   }
 

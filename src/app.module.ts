@@ -13,9 +13,14 @@ import { StudentModule } from './student/student.module';
 import { ParallelModule } from './parallel/parallel.module';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import {EventEmitterModule} from "@nestjs/event-emitter";
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     ConfigModule.forRoot({isGlobal: true}),
     MongooseModule.forRoot(process.env.MONGO_URI),
     EventEmitterModule.forRoot(),
